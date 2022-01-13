@@ -3,7 +3,6 @@ import { CSSProperties } from 'react'
 import { formattedNum } from 'utils/formatNumber'
 import UniswapLogo from 'components/icons/Uniswap'
 import { t, Trans } from '@lingui/macro'
-import { Price, Token } from '@uniswap/sdk-core'
 import SushiswapLogo from 'components/icons/Sushiswap'
 
 type ExchangeName = 'Uniswap' | 'Sushiswap'
@@ -17,7 +16,7 @@ type Props = {
   exchangeName: ExchangeName
   tokenSymbol: string
   exchangeLink?: string
-  WETHPrice?: Price<Token, Token>
+  WETHPrice?: string
   loading?: boolean
   available?: boolean
   style?: CSSProperties
@@ -75,7 +74,7 @@ export default function TokenAMMPriceRow({
               style={{ fontWeight: 400 }}
               title={linkTooltip}
             >
-              {`${formattedNum(WETHPrice.toFixed(0))} ${tokenSymbol}/ETH`}
+              {`${formattedNum(WETHPrice)} ${tokenSymbol}/ETH`}
               <LinkOutlined style={{ marginLeft: '0.2rem' }} />
             </a>
           )

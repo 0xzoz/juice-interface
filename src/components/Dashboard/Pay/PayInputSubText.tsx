@@ -9,6 +9,10 @@ import { CurrencyOption } from 'models/currency-option'
 import { useContext, useMemo } from 'react'
 
 import { ProjectContext } from 'contexts/projectContext'
+import { Tooltip } from 'antd'
+import { InfoCircleOutlined } from '@ant-design/icons'
+import { ThemeContext } from 'contexts/themeContext'
+import AMMPrices from 'components/shared/AMMPrices'
 
 import { CURRENCY_ETH } from 'constants/currency'
 
@@ -27,8 +31,11 @@ export default function InputSubText({
   payInCurrrency: CurrencyOption
   weiPayAmt: BigNumber | undefined
 }) {
-  const { currentFC, tokenSymbol } = useContext(ProjectContext)
+  const { currentFC, tokenSymbol, tokenAddress } = useContext(ProjectContext)
   const converter = useCurrencyConverter()
+  const {
+    theme: { colors },
+  } = useContext(ThemeContext)
 
   const tokenText = tokenSymbol ?? t`tokens`
 
@@ -52,9 +59,30 @@ export default function InputSubText({
 
   return (
     <div style={{ fontSize: '.7rem' }}>
-      <span>
-        <Trans>Receive {receiveText}</Trans>
-      </span>
+      <Trans>Receive {receiveText}</Trans>
+      {tokenSymbol && tokenAddress && (
+        <div>
+          <Trans>
+            or{' '}
+            <Tooltip
+              title={
+                <AMMPrices
+                  tokenSymbol={tokenSymbol}
+                  tokenAddress={tokenAddress}
+                />
+              }
+              placement="bottomLeft"
+              overlayStyle={{ minWidth: '300px' }}
+              overlayInnerStyle={{ padding: '1rem' }}
+            >
+              <span style={{ color: colors.text.action.primary }}>
+                buy {tokenText} on exchange
+                <InfoCircleOutlined style={{ marginLeft: '0.2rem' }} />
+              </span>
+            </Tooltip>
+          </Trans>
+        </div>
+      )}
     </div>
   )
 }

@@ -47,7 +47,7 @@ const ReconfigureFundingModalTrigger: React.FC<Props> = () => {
         size="small"
         disabled={isPreviewMode}
       >
-        Reconfigure funding
+        Reconfigure funding cycle
       </Button>
 
       {localStoreRef.current && (

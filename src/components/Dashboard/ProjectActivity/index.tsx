@@ -63,7 +63,7 @@ export default function ProjectActivity() {
         text = t`Redeem`
         break
       case 'tap':
-        text = t`Withdraw`
+        text = t`Payouts`
         break
       case 'reserves':
         text = t`Reserves`

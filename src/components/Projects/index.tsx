@@ -117,7 +117,7 @@ export default function Projects() {
 
           <a href="/#/create">
             <Button>
-              <Trans>New project</Trans>
+              <Trans>Create project</Trans>
             </Button>
           </a>
         </div>

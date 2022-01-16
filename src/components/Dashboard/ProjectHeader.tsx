@@ -4,7 +4,6 @@ import {
   TwitterOutlined,
 } from '@ant-design/icons'
 import { t } from '@lingui/macro'
-
 import { Button, Tooltip } from 'antd'
 import Discord from 'components/icons/Discord'
 import EditProjectModal from 'components/modals/EditProjectModal'
@@ -260,7 +259,6 @@ export default function ProjectHeader() {
 
       <EditProjectModal
         visible={editProjectModalVisible}
-        projectId={projectId}
         metadata={metadata}
         handle={handle}
         onSuccess={() => setEditProjectModalVisible(false)}

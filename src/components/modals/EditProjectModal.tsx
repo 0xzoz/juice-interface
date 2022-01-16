@@ -1,11 +1,10 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { Button, Divider, Form, Modal } from 'antd'
 import { useForm } from 'antd/lib/form/Form'
 import { FormItems } from 'components/shared/formItems'
-import { UserContext } from 'contexts/userContext'
-import { utils } from 'ethers'
+import { useSetProjectHandleTx } from 'hooks/transactor/SetProjectHandleTx'
+import { useSetProjectUriTx } from 'hooks/transactor/SetProjectUriTx'
 import { ProjectMetadataV3 } from 'models/project-metadata'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   cidFromUrl,
   editMetadataForCid,
@@ -33,23 +32,22 @@ export type HandleFormFields = {
 export default function EditProjectModal({
   handle,
   metadata,
-  projectId,
   visible,
   onSuccess,
   onCancel,
 }: {
   handle: string | undefined
   metadata: ProjectMetadataV3 | undefined
-  projectId: BigNumber
   visible?: boolean
   onSuccess?: VoidFunction
   onCancel?: VoidFunction
 }) {
-  const { transactor, contracts } = useContext(UserContext)
   const [loadingSetURI, setLoadingSetURI] = useState<boolean>()
   const [loadingSetHandle, setLoadingSetHandle] = useState<boolean>()
   const [projectInfoForm] = useForm<ProjectInfoFormFields>()
   const [handleForm] = useForm<HandleFormFields>()
+  const setProjectUriTx = useSetProjectUriTx()
+  const setHandleTx = useSetProjectHandleTx()
 
   useEffect(() => {
     if (metadata) {
@@ -71,7 +69,7 @@ export default function EditProjectModal({
   }, [handleForm, handle, projectInfoForm, metadata])
 
   async function setUri() {
-    if (!transactor || !contracts || !handle) return
+    if (!handle) return
 
     setLoadingSetURI(true)
 
@@ -94,10 +92,8 @@ export default function EditProjectModal({
       return
     }
 
-    transactor(
-      contracts.Projects,
-      'setUri',
-      [projectId.toHexString(), uploadedMetadata.cid],
+    setProjectUriTx(
+      { cid: uploadedMetadata.cid },
       {
         onDone: () => setLoadingSetURI(false),
         onConfirmed: () => {
@@ -123,17 +119,10 @@ export default function EditProjectModal({
   }
 
   function setHandle() {
-    if (!transactor || !contracts) return
-
     setLoadingSetHandle(true)
 
-    transactor(
-      contracts?.Projects,
-      'setHandle',
-      [
-        projectId.toHexString(),
-        utils.formatBytes32String(handleForm.getFieldValue('handle')),
-      ],
+    setHandleTx(
+      { handle: handleForm.getFieldValue('handle') },
       {
         onDone: () => setLoadingSetHandle(false),
         onConfirmed: () => handleForm.resetFields(),
